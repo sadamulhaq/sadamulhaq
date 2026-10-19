@@ -98,7 +98,7 @@ Most of my current work lives in private repos. Here's the gist, codenames only:
 
 ## 🧰 Toolbox
 
-`Go` · `Svelte` · `PocketBase` · `Supabase` · `PostgreSQL` · `Linux` · `WSL` · `SSH` · `Git` · `Google APIs (OAuth / Drive)` · `ServiceNow`
+`Go` · `Svelte` · `PocketBase` · `Supabase` · `PostgreSQL` · `Linux` · `WSL` · `SSH` · `Git` · `Google APIs (OAuth / Drive)` · `ServiceNow` · `Oracle` · `n8n` · `Hermes Agent` · `Slack Automations`
 
 ---
 
