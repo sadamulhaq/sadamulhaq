@@ -2,7 +2,7 @@
 
 I build practical software for startups and business owners: deal pipelines, ops tooling, automation and self-hosted systems that small teams can actually run and maintain.
 
-My background is a mix of computer science, IT and systems integration, and M&A / business operations, so I build with the business problem in mind first and the code second.
+I build with the business problems in mind first and the code/automate second.
 
 ---
 
