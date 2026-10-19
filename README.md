@@ -102,10 +102,7 @@ Most of my current work lives in private repos. Here's the gist, codenames only:
 
 ---
 
-## 🎓 Background
-
-- B.S. in Computer Science
-- IT support → systems integration → AI research → M&A and business operations
+- IT support → systems integration → Business Development → Sales Workflows → AI research → M&A and business operations
 
 ---
 
