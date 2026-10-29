@@ -1,111 +1,152 @@
-# Hey, I'm Sadam 👋
+<p align="center">
+  <img src="./assets/sadam-dashboard.svg" alt="Sadam Ul Haq — AI tooling and business systems dashboard" width="100%" />
+</p>
 
-I build practical software for startups and business owners: deal pipelines, ops tooling, automation and self-hosted systems that small teams can actually run and maintain.
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=500&size=14&duration=2800&pause=1100&color=8B5CF6&background=0D1117&vCenter=true&width=900&height=42&lines=%3E+I+build+systems+that+remove+busywork.;%3E+M%26A+workflows%2C+ops+tooling%2C+and+automation.;%3E+Self-hosted+by+design.+Built+for+real+teams.;%3E+Less+copy-paste.+More+reliable+systems.;%3E+Before+the+invoice+arrives%2C+not+after." alt="Animated terminal tagline" />
+</p>
 
-I build with the business problems in mind first and the code/automate second.
+<p align="center">
+  <img src="https://img.shields.io/badge/Go-Systems-00ADD8?style=flat-square&logo=go&logoColor=white" alt="Go" />
+  <img src="https://img.shields.io/badge/Svelte-Frontend-FF3E00?style=flat-square&logo=svelte&logoColor=white" alt="Svelte" />
+  <img src="https://img.shields.io/badge/Python-Automation-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Data-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Linux-Self--hosted-FCC624?style=flat-square&logo=linux&logoColor=111111" alt="Linux" />
+  <img src="https://img.shields.io/badge/Git-Delivery-F05032?style=flat-square&logo=git&logoColor=white" alt="Git" />
+</p>
 
 ---
 
-## 🔨 Currently building
+## Hey, I'm Sadam 👋
 
-Most of my current work lives in private repos. Here's the gist, codenames only:
+I build practical software for startups and business owners: deal pipelines, operations tooling, automation, and self-hosted systems that small teams can run and maintain.
+
+**Business problems first. Code and automation second.** I care about useful workflows, dependable systems, and keeping infrastructure understandable.
+
+## Currently building
 
 ### 🛰️ Project Lantern
-*A self-hosted control centre for managing app deployments*
+*A self-hosted control centre for managing application deployments.*
 
-- Go backend + Svelte frontend, split into two repos
-- Runs on my own VPS; builds, quality gates and deploys run locally (WSL) and on the server instead of hosted CI
-- Developed in numbered, documented batches, each shipped with its own report
+- Go backend and Svelte frontend, split across two repositories.
+- Builds, quality gates, and deployments run locally (WSL) and on my VPS instead of relying entirely on hosted CI.
+- Work is delivered in numbered, documented batches, each with its own report.
 
 ### 📇 Project Ledger
-*A CRM and deal-tracking platform for acquisition teams*
+*A CRM and deal-tracking platform for acquisition teams.*
 
-- Kanban deal pipeline, role-based access and full audit trails
-- Bulk CSV import with column mapping and custom batching, designed for 200k+ listings
-- Fuzzy deduplication and criteria-based scoring of incoming deals
-- Per-user document storage through Google Drive OAuth
-- PocketBase / Supabase (PostgreSQL + Row Level Security), self-hosted on a VPS
-
-### 📈 Sales & Customers
-
-| Codename | What it does | Built for |
-|---|---|---|
-| **Beacon** | Captures inbound leads from forms and ads, enriches them and scores them by fit | Startups running outbound or paid acquisition |
-| **Switchboard** | One shared inbox for email, WhatsApp and website chat, with assignment and SLAs | Small support and sales teams |
-| **Quill** | Proposal and quote builder with e-signature and payment links | Agencies, consultants, service businesses |
-| **Quota** | Sales targets, commission calculation and rep leaderboards | Founder-led and growing sales teams |
-| **Echo** | AI support assistant trained on a company's own docs, with human handoff | Businesses drowning in repeat questions |
-
-### ⚙️ Operations & Back Office
-
-| Codename | What it does | Built for |
-|---|---|---|
-| **Tally** | Invoicing, recurring billing and automatic payment reminders | Freelancers and service businesses |
-| **Vault** | Secure client portal for document requests, uploads and sign-offs | Accountants, lawyers, consultants |
-| **Roster** | HR hub for onboarding, contracts, leave and records across countries | Remote-first teams |
-| **Payline** | Payroll prep and multi-currency contractor payment reconciliation | Companies paying global contractors |
-| **Shift** | Staff scheduling, clock-in and timesheets | Teams with hourly staff |
-| **Stockroom** | Inventory, purchase orders and stock alerts | Retailers and e-commerce sellers |
-| **Dispatch** | Job booking, routing and a technician mobile view | Field service businesses |
-
-### 💰 Finance & Deals
-
-| Codename | What it does | Built for |
-|---|---|---|
-| **Sieve** | Filters broker listings against buy-box criteria and flags matches | Acquirers and search funds |
-| **Diligence** | Data room with checklists, request tracking and Q&A | Buyers and sellers in M&A |
-| **Horizon** | Cash-flow forecasting dashboard from bank and accounting data | Founders watching runway |
-| **Captable** | Cap table, SAFE tracking and investor updates | Early-stage startups |
-
-### 🤖 AI & Automation
-
-| Codename | What it does | Built for |
-|---|---|---|
-| **Scribe** | Turns call and meeting recordings into CRM notes and tasks | Sales and client-facing teams |
-| **Parse** | Extracts data from invoices, receipts and contracts into clean records | Finance and admin teams |
-| **Flowline** | Self-hosted workflow automation, a lighter Zapier alternative | Teams tired of per-task pricing |
-| **Murmur** | Tracks reviews and brand mentions with sentiment alerts | Local businesses and consumer brands |
-
-### 🧱 Infrastructure & Platform
-
-| Codename | What it does | Built for |
-|---|---|---|
-| **Keystone** | Multi-tenant SaaS starter with auth, billing and roles built in | Founders launching a SaaS fast |
-| **Bastion** | Automated backups and uptime monitoring for small-business servers | Anyone self-hosting |
-| **Prism** | Privacy-friendly, self-hosted product analytics | Startups that want their own data |
-
-### 🏪 Industry Tools
-
-| Codename | What it does | Built for |
-|---|---|---|
-| **Appoint** | Online booking with reminders and no-show reduction | Clinics, salons, studios |
-| **Tableside** | Reservations, QR menus and table ordering | Restaurants and cafés |
-| **Keyring** | Rent collection, maintenance requests and lease tracking | Landlords and property managers |
-| **Campus** | Course hosting, cohorts and student progress | Coaches and training businesses |
-| **Convoy** | Vehicle and delivery tracking with proof of delivery | Logistics and delivery SMEs |
+- Kanban deal pipeline, role-based access, and audit trails.
+- Bulk CSV import with column mapping and batching, designed for large listing datasets.
+- Fuzzy deduplication and criteria-based deal scoring.
+- Per-user document storage through Google Drive OAuth.
+- Exploring PocketBase and Supabase/PostgreSQL with row-level security for self-hosted deployment.
 
 ---
 
-## 💡 What I like working on
+## Product ideas & business workflows
 
-- **Self-hosting & ops:** Linux servers, SSH, keeping things running without paying for heavy infrastructure
-- **Data-heavy internal tools:** imports, deduplication, scoring, pipelines
-- **Systems integration:** getting different platforms to talk to each other cleanly
-- **AI-assisted development:** working with coding agents (Claude Code, Codex) inside real repos, with my own review and quality gates on top
-- **Process automation:** HR, payroll and deal workflows for distributed teams
+These are product concepts and areas I explore—not a claim that every item below is a finished, production-ready product.
+
+<details>
+<summary><strong>📈 Sales & customers</strong></summary>
+
+| Concept | Purpose |
+|---|---|
+| **Beacon** | Capture inbound leads, enrich them, and score them by fit. |
+| **Switchboard** | Shared inbox for email, WhatsApp, and website chat with assignment and SLAs. |
+| **Quill** | Proposal and quote builder with e-signatures and payment links. |
+| **Quota** | Sales targets, commission calculations, and rep leaderboards. |
+| **Echo** | AI support assistant grounded in company documentation with human handoff. |
+
+</details>
+
+<details>
+<summary><strong>⚙️ Operations & back office</strong></summary>
+
+| Concept | Purpose |
+|---|---|
+| **Tally** | Invoicing, recurring billing, and payment reminders. |
+| **Vault** | Secure client portal for document requests, uploads, and sign-offs. |
+| **Roster** | HR onboarding, contracts, leave, and employee records for distributed teams. |
+| **Payline** | Payroll preparation and multi-currency contractor-payment reconciliation. |
+| **Shift** | Staff scheduling, clock-ins, and timesheets. |
+| **Stockroom** | Inventory, purchase orders, and stock alerts. |
+| **Dispatch** | Job booking, routing, and technician-facing mobile workflows. |
+
+</details>
+
+<details>
+<summary><strong>💰 Finance & deals</strong></summary>
+
+| Concept | Purpose |
+|---|---|
+| **Sieve** | Filter broker listings against acquisition criteria and flag matches. |
+| **Diligence** | M&A data room with checklists, request tracking, and Q&A. |
+| **Horizon** | Cash-flow forecasting from bank and accounting data. |
+| **Captable** | Cap-table and SAFE tracking, dilution scenarios, and investor updates. |
+
+</details>
+
+<details>
+<summary><strong>🤖 AI & automation</strong></summary>
+
+| Concept | Purpose |
+|---|---|
+| **Scribe** | Turn meeting recordings into CRM notes and follow-up tasks. |
+| **Parse** | Extract structured data from invoices, receipts, and contracts. |
+| **Flowline** | Self-hosted workflow automation for connecting business tools. |
+| **Murmur** | Monitor reviews and brand mentions with sentiment alerts. |
+
+</details>
+
+<details>
+<summary><strong>🧱 Infrastructure & platform</strong></summary>
+
+| Concept | Purpose |
+|---|---|
+| **Keystone** | Multi-tenant SaaS starter with authentication, billing, and roles. |
+| **Bastion** | Automated backups and uptime monitoring for small-business servers. |
+| **Prism** | Privacy-friendly, self-hosted product analytics. |
+
+</details>
+
+<details>
+<summary><strong>🏪 Industry tools</strong></summary>
+
+| Concept | Purpose |
+|---|---|
+| **Appoint** | Online booking, reminders, and no-show reduction. |
+| **Tableside** | Restaurant reservations, QR menus, and table ordering. |
+| **Keyring** | Rent collection, maintenance requests, and lease tracking. |
+| **Campus** | Course hosting, cohorts, and learner progress tracking. |
+| **Convoy** | Vehicle and delivery tracking with proof of delivery. |
+
+</details>
 
 ---
 
-## 🧰 Toolbox
+## What I like working on
 
-`Go` · `Svelte` · `PocketBase` · `Supabase` · `PostgreSQL` · `Linux` · `WSL` · `SSH` · `Git` · `Google APIs (OAuth / Drive)` · `ServiceNow` · `Oracle` · `n8n` · `Hermes Agent` · `Slack Automations`
+- **Self-hosting & operations:** Linux servers, SSH, deployment workflows, backups, and keeping services maintainable.
+- **Data-heavy internal tools:** imports, deduplication, scoring, and pipelines.
+- **Systems integration:** connecting platforms and APIs without creating fragile workflows.
+- **AI-assisted development:** using coding agents with human review, tests, and clear quality gates.
+- **Process automation:** deal, sales, HR, and operations workflows for distributed teams.
+
+## Toolbox
+
+`Go` · `Svelte` · `Python` · `PocketBase` · `Supabase` · `PostgreSQL` · `Linux` · `WSL` · `SSH` · `Git` · `Google APIs / Drive OAuth` · `ServiceNow` · `Oracle` · `n8n` · `Hermes Agent` · `Slack Automations`
+
+## How I got here
+
+IT support → systems integration → business development → sales workflows → AI research → M&A and business operations
 
 ---
 
-- IT support → systems integration → Business Development → Sales Workflows → AI research → M&A and business operations
+## Work with me 📫
 
----
+If your business process is held together by spreadsheets, repetitive admin, and copy-paste, I'd be glad to talk about how to make it more reliable.
 
-## 📫 Work with me
-
-Founders and business owners: if you've got a process held together by spreadsheets and copy-paste, that's exactly what I like to fix.
+<p align="center">
+  <sub>Build practical systems. Automate the repeatable. Keep the important things understandable.</sub>
+</p>
