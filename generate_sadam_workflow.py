@@ -1,5 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
-import math, os, zipfile, shutil, subprocess
+import math, os, zipfile, shutil, subprocess, tempfile, time
 
 # Animated GitHub profile banner: designed to look like a premium systems console.
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -9,9 +9,9 @@ OUT = os.path.join(OUT_DIR, 'sadam-workflow.gif')
 PREVIEW = os.path.join(ROOT, 'banner-preview.png')
 CONTACT = os.path.join(ROOT, 'animation-contact-sheet.jpg')
 W, H = 1200, 430
-STAGE_FRAMES = 34
-WIPE_FRAMES = 9
-FRAME_MS = 70
+STAGE_FRAMES = 46
+WIPE_FRAMES = 10
+FRAME_MS = 100
 
 # Palette — restrained graphite with electric cyan, indigo, mint, and amber signals.
 BG = (7, 11, 18)
@@ -47,14 +47,14 @@ def font(path, size):
     except OSError: return ImageFont.load_default()
 
 F_HERO = font(FONT_BOLD, 23)
-F_TITLE = font(FONT_BOLD, 17)
-F_SUB = font(FONT_SANS, 12)
-F_BODY = font(FONT_SANS, 11)
-F_LABEL = font(FONT_MONO_BOLD, 10)
-F_MONO = font(FONT_MONO, 9)
-F_SMALL = font(FONT_MONO, 8)
-F_MICRO = font(FONT_MONO, 7)
-F_BIG = font(FONT_MONO_BOLD, 14)
+F_TITLE = font(FONT_BOLD, 18)
+F_SUB = font(FONT_SANS, 13)
+F_BODY = font(FONT_SANS, 12)
+F_LABEL = font(FONT_MONO_BOLD, 11)
+F_MONO = font(FONT_MONO, 10)
+F_SMALL = font(FONT_MONO, 9)
+F_MICRO = font(FONT_MONO, 8)
+F_BIG = font(FONT_MONO_BOLD, 15)
 
 
 def clamp(v, lo=0.0, hi=1.0): return max(lo, min(hi, v))
@@ -362,14 +362,14 @@ def scene_n8n(d, g, p, t):
     edges=[('trigger','if'),('if','enrich'),('enrich','crm'),('if','mail'),('mail','slack')]
     for i,(a,b) in enumerate(edges):
         a0=pts[a]; b0=pts[b]
-        # orthogonal routed connectors
+        # Orthogonal routed connectors join wider text-first cards.
         midx=(a0[0]+b0[0])//2
-        line(d,[ (a0[0]+33,a0[1]),(midx,a0[1]),(midx,b0[1]),(b0[0]-35,b0[1]) ],(43,62,84),2)
-        flow_dot(g,(a0[0]+33,a0[1]),(b0[0]-35,b0[1]),(p*2.1-i*.16)%1,[CYAN,VIOLET,MINT,AMBER,BLUE][i],3)
-    specs=[('trigger','WEBHOOK','new lead',CYAN,'↯'),('if','IF / ROUTE','score > 70',VIOLET,'?'),('enrich','ENRICH','company data',AMBER,'✦'),('crm','CRM UPSERT','record saved',MINT,'✓'),('mail','SEND EMAIL','notify owner',BLUE,'@'),('slack','SLACK ALERT','sales channel',VIOLET,'#')]
-    for i,(key,title,sub,col,ic) in enumerate(specs):
+        line(d,[ (a0[0]+45,a0[1]),(midx,a0[1]),(midx,b0[1]),(b0[0]-45,b0[1]) ],(43,62,84),2)
+        flow_dot(g,(a0[0]+45,a0[1]),(b0[0]-45,b0[1]),(p*2.1-i*.16)%1,[CYAN,VIOLET,MINT,AMBER,BLUE][i],3)
+    specs=[('trigger','WEBHOOK','new lead',CYAN),('if','IF / ROUTE','score > 70',VIOLET),('enrich','ENRICH','company data',AMBER),('crm','CRM UPSERT','record saved',MINT),('mail','SEND EMAIL','notify owner',BLUE),('slack','SLACK ALERT','sales channel',VIOLET)]
+    for i,(key,title,sub,col) in enumerate(specs):
         x,y=pts[key]
-        node(d,g,(x-39,y-25,x+39,y+25),title,sub,col,clamp((p-i*.07)*6),ic)
+        node(d,g,(x-45,y-29,x+45,y+29),title,sub,col,clamp((p-i*.07)*6),None,radius=7)
     # execution inspector
     rounded(d,(895,148,1142,333),9,CARD,BORDER,1)
     text(d,(910,160),'EXECUTION INSPECTOR',F_LABEL,TEXT)
@@ -415,43 +415,6 @@ def scene_tracking(d, g, p, t):
             dot(d,849,yy+4,2,col)
             text(d,(858,yy),name,F_SMALL,TEXT)
             text(d,(1090,yy),status,F_SMALL,col)
-
-
-def scene_code(d, g, p, t):
-    text(d,(340,127),'ENGINEERING DELIVERY  /  CODE → TEST → BUILD → DEPLOY',F_SMALL,MUTED)
-    pill(d,1008,120,'QUALITY GATES',CYAN,width=134)
-    # code editor
-    rounded(d,(347,148,744,333),9,(9,15,24),BORDER,1)
-    rounded(d,(347,148,744,174),8,(17,25,37),None,0)
-    for i,col in enumerate((RED,AMBER,MINT)): dot(d,361+11*i,161,3,col)
-    text(d,(404,156),'automation/runner.py',F_SMALL,MUTED)
-    code=[('01','def run_pipeline(event):',VIOLET),('02','    payload = validate(event)',CYAN),('03','    result = agent.execute(payload)',TEXT),('04','    store.upsert(result)',MINT),('05','    notify.owner(result)',AMBER),('06','    return status(200)',CYAN)]
-    for i,(num,src,col) in enumerate(code):
-        yy=188+i*21; vis=clamp((p-i*.10)*6)
-        text(d,(363,yy),num,F_MICRO,FAINT)
-        if vis>0.05:
-            # progressive text reveal via measured prefix
-            nch=max(1,int(len(src)*vis))
-            text(d,(388,yy),src[:nch],F_SMALL,col)
-            if nch < len(src) and vis<.98:
-                xx=388+d.textlength(src[:nch],font=F_SMALL)
-                rounded(d,(xx,yy+2,xx+2,yy+12),1,CYAN,None,0)
-    # CI pipeline
-    rounded(d,(764,148,1142,333),9,CARD,BORDER,1)
-    text(d,(780,160),'DELIVERY PIPELINE',F_LABEL,TEXT)
-    stages=[('COMMIT','git push',CYAN),('TESTS','42 passed',MINT),('BUILD','image ready',VIOLET),('DEPLOY','vps healthy',AMBER)]
-    for i,(lab,sub,col) in enumerate(stages):
-        y=188+i*35; vis=clamp((p-i*.16)*5)
-        dot(d,792,y+7,5,col if vis>.5 else FAINT)
-        if vis>.5: glow_dot(g,792,y+7,col,2,100)
-        if i<3: line(d,[(792,y+13),(792,y+29)],(45,63,84),2)
-        text(d,(807,y),lab,F_LABEL,TEXT if vis>.5 else FAINT)
-        text(d,(807,y+14),sub,F_SMALL,MUTED if vis>.5 else FAINT)
-        if vis>.7: text(d,(1084,y+2),'PASS',F_MICRO,col)
-    # build progress bar
-    text(d,(780,323),'BUILD PROGRESS',F_MICRO,MUTED)
-    rounded(d,(884,322,1125,329),3,(29,42,57),None,0)
-    rounded(d,(884,322,884+241*ease(p),329),3,CYAN,None,0)
 
 
 def scene_chatbot(d, g, p, t):
@@ -671,8 +634,8 @@ def scene_security(d, g, p, t):
 
 
 def scene_crm_mna(d, g, p, t):
-    text(d,(340,127),'BUSINESS INTELLIGENCE  /  INTAKE · SCORE · ROUTE',F_SMALL,MUTED)
-    pill(d,994,120,'CRM + AI WORKFLOW',VIOLET,width=148)
+    text(d,(340,127),'M&A INTELLIGENCE  /  INTAKE · DEDUPLICATE · SCORE',F_SMALL,MUTED)
+    pill(d,994,120,'DEAL PIPELINE',VIOLET,width=148)
     # intake/inquiry panel
     rounded(d,(348,149,551,333),9,CARD,BORDER,1)
     text(d,(362,161),'INBOUND SIGNAL',F_LABEL,TEXT)
@@ -710,9 +673,10 @@ def scene_crm_mna(d, g, p, t):
 
 
 SCENES = [
-    ('AUTOMATION CONTROL PLANE','Event triggers, conditional routing, integrations and execution traces',CYAN,'workflow.run','5 stages executed'),
+    ('AUTOMATION CONTROL PLANE','Triggers, conditional routing, integrations and execution traces',CYAN,'workflow.run','5 stages executed'),
+    ('VISUAL WORKFLOW ORCHESTRATION','Branched n8n-style workflows with CRM, email and team notifications',VIOLET,'workflow.orchestrate','branch paths completed'),
     ('VPS & SYSTEM ADMINISTRATION','Linux hosts, Docker workloads, reverse proxy and service health',MINT,'infra.health','3 hosts healthy'),
-    ('BACKUP & DISASTER RECOVERY','Encrypted snapshots, integrity checks, retention and restore drills',MINT,'backup.verify','restore point verified'),
+    ('BACKUP & DISASTER RECOVERY','Snapshots, integrity checks, retention policy and restore drills',MINT,'backup.verify','restore point verified'),
     ('DEVELOPMENT & GIT WORKFLOWS','Code changes, diffs, branches, reviews and testable commits',BLUE,'git.review','change validated'),
     ('CI/CD & RELEASE ENGINEERING','Build, test, container packaging, deployment and smoke checks',AMBER,'release.pipeline','health check passed'),
     ('REST APIs & WEBHOOKS','Identity, request validation, endpoint routing and service responses',BLUE,'api.gateway','201 response returned'),
@@ -723,12 +687,13 @@ SCENES = [
     ('OBSERVABILITY & INCIDENT RESPONSE','Metrics, logs, traces, latency, alerting and recovery checks',MINT,'telemetry.stream','service recovered'),
     ('SECURITY & GOVERNANCE','Token validation, role permissions, secret protection and audit trails',RED,'security.policy','access decision logged'),
     ('EMAIL & BUSINESS AUTOMATION','CRM triggers, audience checks, delivery status and follow-up logic',AMBER,'mail.sequence','follow-up queued'),
-    ('AI SUPPORT, CRM & M&A INTELLIGENCE','Intent extraction, deduplication, deal scoring and human routing',VIOLET,'business.intel','record scored and routed'),
+    ('AI CHATBOT & HUMAN HANDOFF','Knowledge retrieval, confidence checks, safe responses and escalation',VIOLET,'support.route','answer validated or escalated'),
+    ('CRM & M&A INTELLIGENCE','Listing intake, fuzzy deduplication, buy-box scoring and deal progression',VIOLET,'business.intel','deal scored and routed'),
 ]
 DRAW_SCENES = [
-    scene_automation, scene_admin, scene_backup, scene_dev, scene_cicd,
-    scene_api, scene_queue, scene_ai, scene_rag, scene_database,
-    scene_tracking, scene_security, scene_email, scene_crm_mna
+    scene_automation, scene_n8n, scene_admin, scene_backup, scene_dev, scene_cicd,
+    scene_api, scene_queue, scene_ai, scene_rag, scene_database, scene_tracking,
+    scene_security, scene_email, scene_chatbot, scene_crm_mna
 ]
 
 
@@ -762,9 +727,9 @@ def static_frame_base(scene_idx, p, t):
         text(d,(50,yy+7),num,F_SMALL,col)
         text(d,(79,yy+7),label,F_LABEL,TEXT)
         # tiny animated activity ticks
-        for j in range(5):
-            barh=3+int(5*(.5+.5*math.sin(t*2.6+i+j*.7)))
-            rounded(d,(227+j*8,yy+13-barh/2,231+j*8,yy+13+barh/2),1,col if j<=int((p*5+i)%6) else (40,55,72),None,0)
+        # Fixed identity indicators keep the left rail visually stable across scene wipes.
+        for j,barh in enumerate((4,6,5,3,4)):
+            rounded(d,(227+j*8,yy+13-barh/2,231+j*8,yy+13+barh/2),1,col if j<4 else (40,55,72),None,0)
     # bottom status
     dot(d,44,373,3,MINT); glow_dot(g,44,373,MINT,3,100)
     text(d,(54,368),'SELF-HOSTED  /  OBSERVABLE',F_MICRO,MUTED)
@@ -780,7 +745,7 @@ def static_frame_base(scene_idx, p, t):
     rounded(d,(1007,40,1157,72),7,(15,24,36),mix(BORDER,col,.5),1)
     dot(d,1020,51,3,col); glow_dot(g,1020,51,col,2,100)
     text(d,(1030,45),'SYSTEM ACTIVE',F_MICRO,col)
-    text(d,(1030,57),f'MODULE {scene_idx+1:02d} / 14',F_MICRO,MUTED)
+    text(d,(1030,57),f'MODULE {scene_idx+1:02d} / {len(SCENES):02d}',F_MICRO,MUTED)
     line(d,[(328,102),(1158,102)],(35,50,68),1)
     # active scene canvas
     DRAW_SCENES[scene_idx](d,g,p,t)
@@ -792,12 +757,12 @@ def static_frame_base(scene_idx, p, t):
     text(d,(510,364),msg,F_SMALL,TEXT)
     # segmented stage progress indicator
     px=872; py=368
-    for i in range(14):
-        ww=14
+    for i in range(len(SCENES)):
+        ww=12
         fill=SCENES[i][2] if i<=scene_idx else (35,49,66)
-        rounded(d,(px+i*18,py,px+i*18+ww,py+5),2,fill,None,0)
-    text(d,(872,382),'14-SCENE SYSTEMS LOOP',F_MICRO,FAINT)
-    text(d,(1090,382),f'{scene_idx+1:02d} / 14',F_MICRO,col)
+        rounded(d,(px+i*17,py,px+i*17+ww,py+5),2,fill,None,0)
+    text(d,(872,382),f'{len(SCENES)}-SCENE SYSTEMS LOOP',F_MICRO,FAINT)
+    text(d,(1090,382),f'{scene_idx+1:02d} / {len(SCENES):02d}',F_MICRO,col)
     # glow composite
     soft=g.filter(ImageFilter.GaussianBlur(6))
     base=Image.alpha_composite(base.convert('RGBA'),soft)
@@ -805,96 +770,127 @@ def static_frame_base(scene_idx, p, t):
     return base.convert('RGB')
 
 
-def make_transition(out_img, in_img, frac):
-    # A clean left-to-right luminous wipe across the workspace reinforces a system handoff.
+def make_transition(out_img, in_img, frac, sweep_color=CYAN):
+    # A clean left-to-right luminous wipe uses the incoming scene accent color.
+    # Pillow compositing is considerably faster than per-pixel Python loops.
     boundary=int(310+frac*(1176-310))
-    out=out_img.copy()
-    old=out_img.load(); new=in_img.load(); pix=out.load()
-    for x in range(310,boundary):
-        for y in range(24,406): pix[x,y]=new[x,y]
+    mask=Image.new('L',(W,H),0)
+    md=ImageDraw.Draw(mask)
+    if boundary > 310:
+        md.rectangle((310,24,min(boundary-1,W-1),406),fill=255)
+    out=Image.composite(in_img,out_img,mask)
     # bright vertical sweep edge
     ov=Image.new('RGBA',(W,H),(0,0,0,0)); gd=ImageDraw.Draw(ov,'RGBA')
-    gd.rectangle((boundary-7,25,boundary+7,405),fill=(*CYAN,22))
-    gd.line((boundary,27,boundary,403),fill=(*CYAN,210),width=2)
+    edge_alpha=int(22*(1-ease(frac)))
+    line_alpha=int(210*(1-ease(frac)))
+    if edge_alpha > 0:
+        gd.rectangle((boundary-7,25,boundary+7,405),fill=(*sweep_color,edge_alpha))
+    if line_alpha > 0:
+        gd.line((boundary,27,boundary,403),fill=(*sweep_color,line_alpha),width=2)
     ov=ov.filter(ImageFilter.GaussianBlur(5))
     out=Image.alpha_composite(out.convert('RGBA'),ov).convert('RGB')
     return out
 
 
-def render_frames():
-    stages=[]
-    for si in range(len(SCENES)):
-        sf=[]
-        for fi in range(STAGE_FRAMES):
-            # Start each scene with some visible structure, then ease into the full workflow.
-            p=0.12+0.88*ease(fi/(STAGE_FRAMES-1))
-            t=si*1.37+p*1.4
-            sf.append(static_frame_base(si,p,t))
-        stages.append(sf)
-    frames=[]
-    for si in range(len(stages)):
-        frames.extend(stages[si])
-        nxt=(si+1)%len(stages)
-        for wi in range(WIPE_FRAMES):
-            frac=ease((wi+1)/WIPE_FRAMES)
-            frames.append(make_transition(stages[si][-1],stages[nxt][0],frac))
-    return frames, stages
+def render_scene_frame(scene_idx, frame_idx):
+    # Start each scene with its structure already readable; movement then animates progress.
+    p=0.75+0.25*ease(frame_idx/(STAGE_FRAMES-1))
+    # Use elapsed time for continuous telemetry, pulse and scan-line movement.
+    t=scene_idx*(STAGE_FRAMES+WIPE_FRAMES)*FRAME_MS/1000.0+frame_idx*FRAME_MS/1000.0
+    return static_frame_base(scene_idx,p,t)
 
 
-def save_animated_gif(frames):
-    # Build one 256-color palette from samples across every scene. FASTOCTREE preserves
-    # the differentiated accent colors better than median-cut for this dark UI.
-    sample_frames=[frames[int(i*(len(frames)-1)/15)] for i in range(16)]
-    thumb=Image.new('RGB',(300,100*len(sample_frames)),BG)
-    for i,im in enumerate(sample_frames): thumb.paste(im.resize((300,100)),(0,100*i))
-    pal=thumb.quantize(colors=256,method=Image.Quantize.FASTOCTREE,dither=Image.Dither.NONE)
-    palette=pal.getpalette()[:256*3]
-    palette_colors=[tuple(palette[i:i+3]) for i in range(0,len(palette),3)]
-    palette_img=Image.new('RGB',(16,16),BG)
-    palette_img.putdata(palette_colors)
-    palette_path=OUT+'.palette.png'
-    palette_img.save(palette_path)
-    qframes=[im.quantize(palette=pal,dither=Image.Dither.NONE) for im in frames]
-    raw_out=OUT+'.raw.gif'
-    qframes[0].save(raw_out,save_all=True,append_images=qframes[1:],duration=FRAME_MS,loop=0,optimize=True,disposal=2)
-    ffmpeg=shutil.which('ffmpeg')
-    if ffmpeg:
-        optimized=OUT+'.optimized.gif'
-        # Use the already-built global palette instead of re-analyzing all frames.
-        # Rectangle-delta encoding keeps the 42-second GIF compact without losing color.
-        cmd=[ffmpeg,'-y','-hide_banner','-loglevel','error','-i',raw_out,'-i',palette_path,
-             '-filter_complex','[0:v][1:v]paletteuse=dither=bayer:bayer_scale=3:diff_mode=rectangle',
-             '-gifflags','+transdiff','-loop','0',optimized]
-        try:
-            subprocess.run(cmd,check=True)
-            os.replace(optimized,OUT)
-            os.remove(raw_out)
-        except (subprocess.CalledProcessError, OSError):
-            if os.path.exists(optimized): os.remove(optimized)
-            os.replace(raw_out,OUT)
-        finally:
-            if os.path.exists(palette_path): os.remove(palette_path)
-    else:
-        os.replace(raw_out,OUT)
-        if os.path.exists(palette_path): os.remove(palette_path)
-
-
-def save_contact_sheet(stages):
-    picks=[stages[i][STAGE_FRAMES-4] for i in range(len(stages))]
-    thumbs=[im.resize((480,172)) for im in picks]
-    sheet=Image.new('RGB',(1000, ((len(thumbs)+1)//2)*202),(8,12,19))
+def save_contact_sheet(stage_previews):
+    thumbs=[im.resize((480,172),Image.Resampling.LANCZOS) for im in stage_previews]
+    sheet=Image.new('RGB',(1000,((len(thumbs)+1)//2)*202),(8,12,19))
     d=ImageDraw.Draw(sheet)
     for i,im in enumerate(thumbs):
         x=12+(i%2)*494; y=12+(i//2)*202
         sheet.paste(im,(x,y))
         d.rectangle((x,y,x+480,y+172),outline=(48,64,85),width=1)
-    sheet.save(CONTACT,quality=88,optimize=True)
+    sheet.save(CONTACT,quality=90,optimize=True)
+
+
+def build_animation():
+    """Render frames to disk as they are made, then encode a looping GIF.
+
+    Streaming PNG frames avoids retaining over a thousand full-resolution images in
+    memory and lets FFmpeg perform palette mapping efficiently.
+    """
+    ffmpeg=shutil.which('ffmpeg')
+    if not ffmpeg:
+        raise RuntimeError('FFmpeg is required to build this high-frame-count GIF. Install FFmpeg and rerun the script.')
+
+    expected_frames=len(SCENES)*(STAGE_FRAMES+WIPE_FRAMES)
+    print(f'Rendering {len(SCENES)} scenes at {W}x{H}; target loop {expected_frames*FRAME_MS/1000:.2f}s',flush=True)
+    t_start=time.time()
+    with tempfile.TemporaryDirectory(prefix='sadam-workflow-',dir=ROOT) as td:
+        frame_dir=os.path.join(td,'frames')
+        os.makedirs(frame_dir,exist_ok=True)
+
+        # Pre-render scene endpoints. They provide loop transitions, an attractive
+        # static fallback preview, and coverage of every scene accent in the palette.
+        first_frames=[]
+        last_frames=[]
+        for si in range(len(SCENES)):
+            scene_start=si*(STAGE_FRAMES+WIPE_FRAMES)*FRAME_MS/1000.0
+            first_frames.append(static_frame_base(si,0.75,scene_start))
+            last_t=scene_start+(STAGE_FRAMES-1)*FRAME_MS/1000.0
+            last_frames.append(static_frame_base(si,1.0,last_t))
+        stage_previews=last_frames
+
+        # Build one shared palette from the start and fully-developed view of every scene.
+        palette_samples=first_frames+last_frames
+        thumb_h=108
+        thumb=Image.new('RGB',(300,thumb_h*len(palette_samples)),BG)
+        for i,im in enumerate(palette_samples):
+            thumb.paste(im.resize((300,thumb_h),Image.Resampling.LANCZOS),(0,thumb_h*i))
+        pal=thumb.quantize(colors=256,method=Image.Quantize.FASTOCTREE,dither=Image.Dither.NONE)
+        palette=pal.getpalette()[:256*3]
+        palette_colors=[tuple(palette[i:i+3]) for i in range(0,len(palette),3)]
+        palette_img=Image.new('RGB',(16,16),BG)
+        palette_img.putdata(palette_colors)
+        palette_path=os.path.join(td,'palette.png')
+        palette_img.save(palette_path)
+
+        frame_idx=0
+        t_frames=time.time()
+        for si in range(len(SCENES)):
+            for fi in range(STAGE_FRAMES):
+                im=render_scene_frame(si,fi)
+                im.save(os.path.join(frame_dir,f'frame_{frame_idx:05d}.png'),format='PNG',compress_level=1)
+                frame_idx+=1
+            nxt=(si+1)%len(SCENES)
+            for wi in range(WIPE_FRAMES):
+                frac=ease((wi+1)/WIPE_FRAMES)
+                im=make_transition(last_frames[si],first_frames[nxt],frac,SCENES[nxt][2])
+                im.save(os.path.join(frame_dir,f'frame_{frame_idx:05d}.png'),format='PNG',compress_level=1)
+                frame_idx+=1
+            print(f'Completed scene {si+1}/{len(SCENES)} ({frame_idx}/{expected_frames} frames)',flush=True)
+        print(f'Frame rendering and PNG export took {time.time()-t_frames:.1f}s',flush=True)
+
+        optimized=OUT+'.optimized.gif'
+        cmd=[ffmpeg,'-y','-hide_banner','-loglevel','error',
+             '-framerate',f'{1000/FRAME_MS:g}','-i',os.path.join(frame_dir,'frame_%05d.png'),
+             '-i',palette_path,
+             '-filter_complex','[0:v][1:v]paletteuse=dither=bayer:bayer_scale=3:diff_mode=rectangle',
+             '-gifflags','+transdiff','-loop','0',optimized]
+        t_encode=time.time()
+        subprocess.run(cmd,check=True)
+        os.replace(optimized,OUT)
+        print(f'GIF encoding took {time.time()-t_encode:.1f}s',flush=True)
+
+    # Make sure the generated file is non-empty before reporting success.
+    if not os.path.exists(OUT) or os.path.getsize(OUT)==0:
+        raise RuntimeError('GIF output was not created.')
+    print(f'Created {OUT}: {expected_frames} frames, {expected_frames*FRAME_MS/1000:.2f}s loop, {os.path.getsize(OUT)/1024/1024:.2f} MiB',flush=True)
+    print(f'Total build time: {time.time()-t_start:.1f}s',flush=True)
+    return stage_previews, expected_frames
+
 
 if __name__=='__main__':
-    frames, stages=render_frames()
-    save_animated_gif(frames)
-    stages[0][-4].save(PREVIEW)
-    save_contact_sheet(stages)
-    print(f'Created {OUT}: {len(frames)} frames, {len(frames)*FRAME_MS/1000:.1f}s loop, {os.path.getsize(OUT)/1024/1024:.2f} MiB')
+    stage_previews, frame_count=build_animation()
+    stage_previews[0].save(PREVIEW)
+    save_contact_sheet(stage_previews)
     print(f'Preview: {PREVIEW}')
     print(f'Contact sheet: {CONTACT}')
