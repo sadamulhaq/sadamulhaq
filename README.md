@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/sadam-dashboard.svg" alt="Sadam Ul Haq — AI tooling and business systems dashboard" width="100%" />
+  <img src="./assets/sadam-workflow.gif" alt="Animated systems dashboard: 14-scene technical dashboard covering automation, VPS administration, backup recovery, Git, CI/CD, REST APIs, reliable queues, AI agents, RAG, databases, observability, security, email automation, and CRM/M&A workflows" width="100%" />
 </p>
 
 <p align="center">
