@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="./assets/sadam-workflow.gif" alt="16-scene animated systems dashboard covering workflow orchestration, VPS administration, backups and recovery, Git, CI/CD, REST APIs, reliable queues, AI agents, RAG, databases, observability, security, email automation, chatbot handoff, and CRM/M&A intelligence" width="100%" />
+  <img src="./assets/sadam-workflow.gif" alt="16-scene full-width animated technical workflow dashboard covering workflow orchestration, VPS administration, backups and recovery, Git, CI/CD, REST APIs, reliable queues, AI agents, RAG, databases, observability, security, email automation, chatbot handoff, and CRM/M&A intelligence" width="100%" />
 </p>
 
-<p align="center"><sub>Looping systems simulation · illustrative activity, not a live feed from production infrastructure.</sub></p>
+<p align="center"><sub>Full-width systems workflow simulation · detailed card annotations · light particles follow routed connectors · illustrative activity, not a live production feed.</sub></p>
 
 <p align="center">
   <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=500&size=14&duration=2800&pause=1100&color=8B5CF6&background=0D1117&vCenter=true&width=900&height=42&lines=%3E+I+build+systems+that+remove+busywork.;%3E+M%26A+workflows%2C+ops+tooling%2C+and+automation.;%3E+Self-hosted+by+design.+Built+for+real+teams.;%3E+Less+copy-paste.+More+reliable+systems.;%3E+Before+the+invoice+arrives%2C+not+after." alt="Animated terminal tagline" />
