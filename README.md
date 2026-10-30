@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/sadam-workflow.gif" alt="16-scene full-width animated technical workflow dashboard covering workflow orchestration, VPS administration, backups and recovery, Git, CI/CD, REST APIs, reliable queues, AI agents, RAG, databases, observability, security, email automation, chatbot handoff, and CRM/M&A intelligence" width="100%" />
+  <img src="./assets/sadam-workflow-v2.gif" alt="16-scene full-width animated technical workflow dashboard covering workflow orchestration, VPS administration, backups and recovery, Git, CI/CD, REST APIs, reliable queues, AI agents, RAG, databases, observability, security, email automation, chatbot handoff, and CRM/M&A intelligence" width="100%" />
 </p>
 
 <p align="center"><sub>Full-width systems workflow simulation · detailed card annotations · light particles follow routed connectors · illustrative activity, not a live production feed.</sub></p>
